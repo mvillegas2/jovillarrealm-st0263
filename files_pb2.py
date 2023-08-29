@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0b\x66iles.proto\x1a\x1bgoogle/protobuf/empty.proto\"\x19\n\x08\x46ileList\x12\r\n\x05\x66iles\x18\x01 \x03(\t\"\x15\n\x05Query\x12\x0c\n\x04\x66ile\x18\x01 \x01(\t2_\n\tRPService\x12\x30\n\tListFiles\x12\x16.google.protobuf.Empty\x1a\t.FileList\"\x00\x12 \n\tFindFiles\x12\x06.Query\x1a\t.FileList\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0b\x66iles.proto\x1a\x1bgoogle/protobuf/empty.proto\"\x19\n\x08\x46ileList\x12\r\n\x05\x66iles\x18\x01 \x03(\t\"\x15\n\x05Query\x12\x0c\n\x04\x66ile\x18\x01 \x01(\t2X\n\x02RP\x12\x30\n\tListFiles\x12\x16.google.protobuf.Empty\x1a\t.FileList\"\x00\x12 \n\tFindFiles\x12\x06.Query\x1a\t.FileList\"\x00\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -26,6 +26,6 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _globals['_FILELIST']._serialized_end=69
   _globals['_QUERY']._serialized_start=71
   _globals['_QUERY']._serialized_end=92
-  _globals['_RPSERVICE']._serialized_start=94
-  _globals['_RPSERVICE']._serialized_end=189
+  _globals['_RP']._serialized_start=94
+  _globals['_RP']._serialized_end=182
 # @@protoc_insertion_point(module_scope)

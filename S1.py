@@ -8,18 +8,18 @@ import files_pb2_grpc
 
 from conf import self_conf
 
-# TODO MOM, readme
+
 conf = self_conf()
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
-    files_pb2_grpc.add_RPServiceServicer_to_server(RPService(), server)
+    files_pb2_grpc.add_RPServicer_to_server(RPService(), server)
     server.add_insecure_port("0.0.0.0" + ":" + conf["RPC_PORT"])
     print("Service is running... ")
     server.start()
     server.wait_for_termination()
 
 
-class RPService(files_pb2_grpc.RPServiceServicer):
+class RPService(files_pb2_grpc.RPServicer):
     def ListFiles(self, request, context):
         print("List recibido")
         ops_dir = conf["SUBDIR"]

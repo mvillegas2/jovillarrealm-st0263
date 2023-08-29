@@ -50,7 +50,7 @@ def find_files(query):
 def rp_call(conf: dict, pc: str, param=None) -> list[str]:
     # channel = grpc.secure_channel(ms_IP+":50051", grpc.ssl_channel_credentials(conf["pem"]))
     channel = grpc.insecure_channel(conf["SERVICE_1_IP"] + ":" + conf["RPC_PORT"])
-    stub = files_pb2_grpc.RPServiceStub(channel)
+    stub = files_pb2_grpc.RPStub(channel)
     if pc == "list":
         empty_msg = files_pb2_grpc.google_dot_protobuf_dot_empty__pb2.Empty()
         response = list(stub.ListFiles(empty_msg).files)

@@ -49,6 +49,7 @@ def mom():
     channel.basic_consume(
         queue=conf["RABBITMQ_QUEUE_REQUEST"], on_message_callback=callback, auto_ack=True
     )
+    print("Consumiendo...")
     channel.start_consuming()
 
 if __name__ == "__main__":
