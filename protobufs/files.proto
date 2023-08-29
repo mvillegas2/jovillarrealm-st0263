@@ -1,0 +1,20 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+
+message FileList {
+    // Lista de nombres de archivos
+    repeated string files = 1;
+}
+
+message Query{
+    // Query del tipo de archivo que va a ser buscado, contiene un `string file`
+    string file = 1;
+}
+
+service RP{
+    // Lista los nombres de archivos en el cwd del servidor de rpc
+    rpc ListFiles(google.protobuf.Empty) returns (FileList) {}
+    // Lista los nombres de archivos en el cwd del servidor que cumplan con la busqueda especificada
+    rpc FindFiles(Query) returns (FileList) {}
+}
+
