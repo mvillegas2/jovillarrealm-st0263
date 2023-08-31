@@ -1,11 +1,11 @@
 import pika
-from conf import self_conf
+from conf import configure
 import json
 import os, glob
 import ops
 def mom():
-    conf = self_conf()
 
+    conf = configure()
     connection = pika.BlockingConnection(
         pika.ConnectionParameters(
             conf["MOM_SERVER_IP"],

@@ -10,3 +10,9 @@ def find_files(root, query):
     ]
 def list_files(conf):
     return find_files(conf, "**")
+
+if __name__ == "__main__":
+    from conf import configure
+    conf = configure()
+    print(find_files(conf["SUBDIR"], "**"))
+    print(list_files(conf["SUBDIR"]))

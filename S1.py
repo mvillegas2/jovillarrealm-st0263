@@ -6,10 +6,10 @@ import grpc
 import files_pb2
 import files_pb2_grpc
 
-from conf import self_conf
+from conf import configure
 import ops
 
-conf = self_conf()
+conf = configure()
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
     files_pb2_grpc.add_RPServicer_to_server(RPService(), server)

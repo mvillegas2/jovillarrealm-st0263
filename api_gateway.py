@@ -4,11 +4,11 @@ import grpc
 import files_pb2
 import files_pb2_grpc
 import pika
-from conf import self_conf
+from conf import configure
 
 # python -m grpc_tools.protoc -I ./protobufs --python_out=. --pyi_out=. --grpc_python_out=. ./protobufs/files.proto
 
-conf = self_conf()
+conf = configure()
 
 app = Flask(__name__)
 
