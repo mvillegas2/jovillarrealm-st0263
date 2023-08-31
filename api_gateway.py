@@ -36,13 +36,13 @@ def list_files():
 def find_files(query):
     directive = "find"
     try:
-        files = rp_call(conf, directive)
+        files = rp_call(conf, directive, query)
+        pass
     except:
         try:
-            files = MO_call(conf, directive, query)
+            files = MO_call(conf, directive,query)
         except:
             files = []
-    files = files
     print(f"A enviar {files}")
     return jsonify(files)
 
@@ -51,14 +51,16 @@ def rp_call(conf: dict, pc: str, param=None) -> list[str]:
     # channel = grpc.secure_channel(ms_IP+":50051", grpc.ssl_channel_credentials(conf["pem"]))
     channel = grpc.insecure_channel(conf["SERVICE_1_IP"] + ":" + conf["RPC_PORT"])
     stub = files_pb2_grpc.RPStub(channel)
+
     if pc == "list":
         empty_msg = files_pb2_grpc.google_dot_protobuf_dot_empty__pb2.Empty()
         response = list(stub.ListFiles(empty_msg).files)
     elif pc == "find" and param is not None:
-        query = files_pb2.Query(file=param)
         print(f"param: {param}")
+        query = files_pb2.Query(file=param)
         response = list(stub.FindFiles(query).files)
     else:
+        print("WHAT")
         response = []
     return response
 
@@ -72,23 +74,28 @@ def MO_call(conf: dict, pc: str, param=None):
             pika.PlainCredentials(conf["RABBITMQ_USER"], conf["RABBITMQ_PASSWORD"]),
         )
     )
+    response = None
     try:
         pc = json.dumps({"action": pc, "query": param})
         channel = connection.channel()
-        # TODO configure file_exchange in RabbitMQ
         channel.basic_publish(
             exchange=conf["RABBITMQ_EXCHANGE"],
             routing_key=conf["RABBITMQ_QUEUE_REQUEST_KEY"],
             body=pc,
         )
-        response = channel.basic_get(queue=conf["RABBITMQ_QUEUE_RESPONSE"])
-        response = json.loads(response.body)
+        def callback(ch, method, properties, body):
+            print(body)
+            files = body
+        method, properties, body = channel.basic_get(queue=conf["RABBITMQ_QUEUE_RESPONSE"], auto_ack=True)
+        if body:
+            response = json.loads(body)
         connection.close()
-    except KeyboardInterrupt:
-        response = None
+    except:
         connection.close()
 
     return response
+
+
 
 
 if __name__ == "__main__":

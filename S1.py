@@ -7,7 +7,7 @@ import files_pb2
 import files_pb2_grpc
 
 from conf import self_conf
-
+import ops
 
 conf = self_conf()
 def serve():
@@ -22,15 +22,8 @@ def serve():
 class RPService(files_pb2_grpc.RPServicer):
     def ListFiles(self, request, context):
         print("List recibido")
-        ops_dir = conf["SUBDIR"]
-        files = []
-        for dir in os.walk(ops_dir):
-            path, subdirs, sub_files = dir
-            for file in sub_files:
-                files.append(os.path.join(path,file))
+        files = ops.list_files(conf["SUBDIR"])
         print(f"A enviar {files}")
-
-
         return files_pb2.FileList(files=files)
 
     def FindFiles(self, request, context):
@@ -38,11 +31,7 @@ class RPService(files_pb2_grpc.RPServicer):
         print(f"Context {context}")
         query =  str(request.file)
         print(query)
-        files = [
-            file
-            for file in glob.glob(os.path.join(conf["SUBDIR"], query))
-            if os.path.isfile(file)
-        ]
+        files = ops.find_files(conf["SUBDIR"], query)
         print(f"A enviar {files}")
         return files_pb2.FileList(files=files)
 

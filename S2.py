@@ -2,6 +2,7 @@ import pika
 from conf import self_conf
 import json
 import os, glob
+import ops
 def mom():
     conf = self_conf()
 
@@ -19,26 +20,17 @@ def mom():
     def callback(ch, method, properties, body):
         """Procesar cada mensaje"""
         payload = json.loads(body)
-
+        files = None
         if payload["action"] == "list":
             print("List recibido")
-            ops_dir = conf["SUBDIR"]
-            files = []
-            for dir in os.walk(ops_dir):
-                path, subdirs, sub_files = dir
-                for file in sub_files:
-                    files.append(os.path.join(path, file))
+            files = ops.list_files(conf["SUBDIR"])
             print(f"A enviar {files}")
         elif payload["action"] == "find":
             query = payload["query"]
             print(f"Find {query}")
-
-            files = [
-                file
-                for file in glob.glob(os.path.join(conf["SUBDIR"], query))
-                if os.path.isfile(file)
-            ]
+            files = ops.find_files(conf["SUBDIR"],query)
             print(f"A enviar {files}")
+        if files:
             channel.basic_publish(
                 exchange=conf["RABBITMQ_EXCHANGE"],
                 routing_key=conf["RABBITMQ_QUEUE_RESPONSE_KEY"],
@@ -49,8 +41,9 @@ def mom():
     channel.basic_consume(
         queue=conf["RABBITMQ_QUEUE_REQUEST"], on_message_callback=callback, auto_ack=True
     )
-    print("Consumiendo...")
+    print("Consumiendo")
     channel.start_consuming()
+    
 
 if __name__ == "__main__":
     mom()
