@@ -1,3 +1,11 @@
+# Integrantes del reto 3
+
+Jorge Alfredo Villarreal Márquez
+
+Daniel Gonzalez Bernal
+
+Martin Villegas Aristizábal
+
 Para las máquinas que no sean el servidor de NFS:
 ```sh
 sudo apt update
@@ -35,7 +43,7 @@ Privadas:
 NFS_Server: 172.31.41.237 
 MySQL: 172.31.36.135
 
-App1: 172.31.42.234
+Drupal1: 172.31.42.234
 Drupal2: 172.31.35.156
 
 LB
