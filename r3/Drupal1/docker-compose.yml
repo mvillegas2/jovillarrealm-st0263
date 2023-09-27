@@ -1,0 +1,22 @@
+services:
+  drupal:
+    image: drupal:latest
+    ports:
+      - "80:80"
+      - "3306:3306"
+    volumes:
+      - /mnt/nfs_clientshare:/var/www/html/sites/default/files  # Mount the NFS share here for Drupal files
+      - /var/www/html/modules
+      - /var/www/html/profiles
+      - /var/www/html/themes
+      # this takes advantage of the feature in Docker that a new anonymous
+      # volume (which is what we're creating here) will be initialized with the
+      # existing content of the image at the same location
+      - /var/www/html/sites
+    restart: always
+    environment:
+      DRUPAL_DATABASE_HOST: 172.31.36.135  # Replace with the IP address or hostname of your MySQL client (Machine C)
+      DRUPAL_DATABASE_PORT: 3306
+      DRUPAL_DATABASE_NAME: exampledb
+      DRUPAL_DATABASE_USER: exampleuser
+      DRUPAL_DATABASE_PASSWORD: examplepass
