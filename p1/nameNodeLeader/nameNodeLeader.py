@@ -24,7 +24,30 @@ print(grpc_addresses)
 current_server_index = 0  # Initialize the index to the first server
 file_lists = {}  # Dictionary to store the file lists for each server
 
-
+def check_other_server_health():
+    other_server_url = f"http://{env('NAME_NODE')}:8080/list"  # Replace with the URL of the other server
+    try:
+        response = requests.get(other_server_url)
+        if response.status_code != 200:
+            return False
+    except requests.RequestException:
+        return False
+    return True
+def monitor_other_server():
+    while True:
+        if not check_other_server_health():
+            print("The other server is not healthy. Taking over...")
+            # Start a background thread to periodically update the file lists
+            update_interval = 60  # Update every 60 seconds (adjust as needed)
+            update_thread = threading.Thread(target=periodic_file_list_update, args=(update_interval,))
+            update_thread.daemon = True
+            update_thread.start()
+            # Add your code here to handle taking over the functionality
+            # For example, you can start serving as a replacement
+            # by running the necessary server logic.
+        else:
+            print("The other server is healthy.")
+        time.sleep(15)  # Adjust the interval as needed
 def get_server():
     addresses = cycle(server_addresses)
     for server_address in addresses:
@@ -79,11 +102,7 @@ def periodic_file_list_update(interval):
         time.sleep(interval)
 
 
-# Start a background thread to periodically update the file lists
-update_interval = 60  # Update every 60 seconds (adjust as needed)
-update_thread = threading.Thread(target=periodic_file_list_update, args=(update_interval,))
-update_thread.daemon = True
-update_thread.start()
+
 
 @app.route('/uploadserver/', methods=['GET'])
 def upload_server():
@@ -186,4 +205,7 @@ def list_files():
 
 if __name__ == '__main__':
     #app.run(port=8080)
-    app.run(host=env('LEADER_IP'),port=8080)
+    monitor_thread = threading.Thread(target=monitor_other_server)
+    monitor_thread.daemon = True
+    monitor_thread.start()
+    app.run(host=env('SELF_IP'),port=8080)

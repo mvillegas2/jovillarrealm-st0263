@@ -25,7 +25,7 @@ current_server_index = 0  # Initialize the index to the first server
 file_lists = {}  # Dictionary to store the file lists for each server
 
 def check_other_server_health():
-    other_server_url = f"http://{env('LEADER_IP')}:8080/list"  # Replace with the URL of the other server
+    other_server_url = f"http://{env('NAME_NODE')}:8080/list"  # Replace with the URL of the other server
     try:
         response = requests.get(other_server_url)
         if response.status_code != 200:

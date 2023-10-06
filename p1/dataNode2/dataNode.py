@@ -8,7 +8,7 @@ import environs
 
 env = environs.Env()
 env.read_env()
-print(f"Public: '{env('FLASK_SERVER_IP')}'")
+print(f"Public: '{env('PUBLIC_SERVER_IP')}'")
 print(f"Private: '{env('GRPC_SERVER_IP')}'")
 print(f"Backup: '{env('BACKUP')}'")
 
