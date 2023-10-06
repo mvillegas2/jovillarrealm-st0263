@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package file;
+
+service FileService {
+
+    // List available files on the server.
+    rpc ListFiles(Empty) returns (ListFilesResponse);
+
+    // Replicate a file on the server.
+    rpc ReplicateFile(stream ReplicateRequest) returns (ReplicateResponse);
+
+}
+
+message FileChunk {
+    bytes content = 1;
+}
+
+message DownloadRequest {
+    string filename = 1;
+}
+
+message UploadResponse {
+    string message = 1;
+}
+
+message ListFilesResponse {
+    repeated string filenames = 1;
+}
+
+message Empty {}
+
+message ReplicateRequest {
+    string filename = 1;
+    bytes content = 2;  // Add the content field
+}
+
+message ReplicateResponse {
+    string message = 1;
+}
